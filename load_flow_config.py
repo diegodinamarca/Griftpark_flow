@@ -21,7 +21,7 @@ def load_flow_config():
     ztop = 20.0
     zbot = 0.0
 
-    nlay = 1
+    nlay = 2
     nrow = 50
     ncol = 100
 
