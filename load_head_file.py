@@ -57,7 +57,7 @@ def get_common_extent(headfiles):
     
     # Verify all have the same cell sizes
     for t in transforms[1:]:
-        #print(f"Checking cell sizes: delc={delc}, delr={delr} against {t.a}, {-t.e}")
+        print(f"Checking cell sizes: delc={delc}, delr={delr} against {t.a}, {-t.e}")
         if abs(t.a - delc) > 1e-1 or abs(-t.e - delr) > 1e-1:
             raise ValueError("Rasters have different cell sizes")
     
@@ -123,4 +123,4 @@ def get_clipped_head_data(headfiles):
             
             clipped_data_list.append(data)
     
-    return clipped_data_list, delc, delr, ncol, nrow, Lx, Ly
+    return clipped_data_list

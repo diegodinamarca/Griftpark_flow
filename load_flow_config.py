@@ -18,8 +18,8 @@ def load_flow_config():
 
 
     # head file
-    headfile_L1 = "C:/Users/rappe/OneDrive/Documentos/Master Courses/EnvH/Griftpark/head_first_aquifer.tif"
-    headfile_L2 = "C:/Users/rappe/OneDrive/Documentos/Master Courses/EnvH/Griftpark/head_second_aquifer.tif"
+    headfile_L1 = "C:/Users/rappe/OneDrive/Documentos/Master Courses/EnvH/Griftpark/head_L1.tif"
+    headfile_L2 = "C:/Users/rappe/OneDrive/Documentos/Master Courses/EnvH/Griftpark/head_L2.tif"
     headfiles = [headfile_L1, headfile_L2]
 
     # ===== SPATIAL DISCRETIZATION =====
@@ -38,7 +38,7 @@ def load_flow_config():
     
     # Load head field
     delc, delr, ncol, nrow, Lx, Ly, left, bottom, right, top = get_common_extent(headfiles)  # to verify common extent and cell sizes
-    data = get_clipped_head_data(headfiles)["clipped_data_list"]  # to get head data clipped to common extent
+    data = get_clipped_head_data(headfiles)  # to get head data clipped to common extent
     hdata = data[0]  # Assuming headfile_L1 corresponds to the first layer (L1)
     strt = list(nlay * [np.zeros((nrow, ncol), dtype=np.float32)])
     strt[0] = hdata
@@ -63,7 +63,7 @@ def load_flow_config():
     # strt = np.ones((nlay, nrow, ncol), dtype=np.float32) * 25.0
     # strt[:, :, 0] = 25.0
     # strt[:, :, -1] = 24.5
-    #strt = data
+    # strt = data
     
     # Add head boundaries for second aquifer (layer 6)
 
