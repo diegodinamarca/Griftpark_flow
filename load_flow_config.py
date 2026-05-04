@@ -29,7 +29,7 @@ def load_flow_config():
     # Ly = 700.0
 
     ztop = 0.0
-    zbot = [-5, -15, -30, -50.0, -60.0, -100.0]
+    zbot = [-5, -15, -35, -55.0, -60.0, -100.0]
 
     nlay = 6 # LAYER 1-4 (first acquitard) LAYER 5 = confining clay layer LAYER 6 = 2nd acquitard
     # nrow = 70
