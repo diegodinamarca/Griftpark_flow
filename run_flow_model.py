@@ -30,8 +30,6 @@ head_dif = param_dic["head_dif"]
 Lx = param_dic["Lx"]
 prsity = param_dic["prsity"]
 
-
-#%%
 model_ws ="./model_no_sorption"
 modelname_mf= "flow_model"
 modelname_mt = 'transport_no_sorption'

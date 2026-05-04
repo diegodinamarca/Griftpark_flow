@@ -15,11 +15,13 @@ def load_flow_config():
     # ===== PATHS =====
     exe_name_mf = r'C:\Simcore\PM8\modflow2005\mf2005'
     exe_name_mt = r'C:\Simcore\PM8\mt3dms\mt3dms5b'
-    
-    
+
+
     # head file
     headfile_L1 = "C:/Users/rappe/OneDrive/Documentos/Master Courses/EnvH/Griftpark/head_first_aquifer.tif"
-    
+    headfile_L2 = "C:/Users/rappe/OneDrive/Documentos/Master Courses/EnvH/Griftpark/head_second_aquifer.tif"
+    headfiles = [headfile_L1, headfile_L2]
+
     # ===== SPATIAL DISCRETIZATION =====
     # Lx = 400.0
     # Ly = 700.0
@@ -35,8 +37,18 @@ def load_flow_config():
     # delc = Ly / nrow
     
     # Load head field
-    data, delc, delr, ncol, nrow, Lx, Ly = load_head_field(headfile_L1)
-    
+    delc, delr, ncol, nrow, Lx, Ly, left, bottom, right, top = get_common_extent(headfiles)  # to verify common extent and cell sizes
+    data = get_clipped_head_data(headfiles)["clipped_data_list"]  # to get head data clipped to common extent
+    hdata = data[0]  # Assuming headfile_L1 corresponds to the first layer (L1)
+    strt = list(nlay * [np.zeros((nrow, ncol), dtype=np.float32)])
+    strt[0] = hdata
+    strt[1] = hdata
+    strt[2] = hdata
+    strt[3] = hdata
+    strt[4] = hdata
+    hdata = data[1]  # Assuming headfile_L2 corresponds to the second layer (L2)
+    strt[5] = hdata
+
     # ===== BOUNDARY CONDITIONS =====
     ibound = np.ones((nlay, nrow, ncol), dtype=np.int32)
     ibound[:, :, 0] = -1
@@ -51,8 +63,7 @@ def load_flow_config():
     # strt = np.ones((nlay, nrow, ncol), dtype=np.float32) * 25.0
     # strt[:, :, 0] = 25.0
     # strt[:, :, -1] = 24.5
-    head_dif = 25.0 - 24.5
-    strt = data
+    #strt = data
     
     # Add head boundaries for second aquifer (layer 6)
 
@@ -175,8 +186,7 @@ def load_flow_config():
         # --- metadata (no usado directamente por flopy pero útil) ---
         "Lx": Lx,
         "Ly": Ly,
-        "head_dif": head_dif,
-        
+
         # --- basic transport ---
         "icbund": icbund,
         "sconc_array": sconc_array,
