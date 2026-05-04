@@ -18,6 +18,8 @@ import numpy as np
 import flopy
 
 param_dic = load_flow_config()
+print("Config loaded successfully")
+
 Lx = param_dic["Lx"]
 Ly = param_dic["Ly"]
 c0 = param_dic["c0"]
@@ -26,12 +28,9 @@ source_col = param_dic["source_col"]
 obs_row, obs_col = param_dic["obs_row"], param_dic["obs_col"]
 delr = param_dic["delr"]
 ks = param_dic["hk"]
-head_dif = param_dic["head_dif"]
 Lx = param_dic["Lx"]
 prsity = param_dic["prsity"]
 
-
-#%%
 model_ws ="./model_no_sorption"
 modelname_mf= "flow_model"
 modelname_mt = 'transport_no_sorption'
@@ -42,17 +41,12 @@ mf, success, buff = create_flow_model(
     param_dic=param_dic
 )
 
-# # ===== MODEL NAME =====
-# mt, success_mt, buff_mt, spd = create_transport_model(
-#     modelname_mt=modelname_mt,
-#     model_ws=model_ws,
-#     mf=mf,
-#     param_dic=param_dic,
-#     kd = 0.001, lambda1 = 0.0, isothm = 0, ireact = 0, igetsc = 0
-# )
+print(f"Model creation completed. Success: {success}")
 
-plot_head(model_ws, modelname_mf, Lx, Ly, nlayer=0)
-plot_head(model_ws, modelname_mf, Lx, Ly, nlayer=5)
-# plot_btc(model_ws, obs_row, obs_col)
-# plot_concPlume(model_ws, obs_row, obs_col, Lx, Ly, source_row, source_col, c0)
+if success:
+    plot_head(model_ws, modelname_mf, Lx, Ly, nlayer=0)
+    plot_head(model_ws, modelname_mf, Lx, Ly, nlayer=5)
+else:
+    print("Model run failed. Check the MODFLOW executable path and try again.")
+    print("Buff:", buff)
 
