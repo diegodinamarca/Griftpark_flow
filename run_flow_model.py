@@ -42,80 +42,17 @@ mf, success, buff = create_flow_model(
     param_dic=param_dic
 )
 
-# ===== MODEL NAME =====
-mt, success_mt, buff_mt, spd = create_transport_model(
-    modelname_mt=modelname_mt,
-    model_ws=model_ws,
-    mf=mf,
-    param_dic=param_dic,
-    kd = 0.001, lambda1 = 0.0, isothm = 0, ireact = 0, igetsc = 0
-)
+# # ===== MODEL NAME =====
+# mt, success_mt, buff_mt, spd = create_transport_model(
+#     modelname_mt=modelname_mt,
+#     model_ws=model_ws,
+#     mf=mf,
+#     param_dic=param_dic,
+#     kd = 0.001, lambda1 = 0.0, isothm = 0, ireact = 0, igetsc = 0
+# )
 
 plot_head(model_ws, modelname_mf, Lx, Ly, nlayer=0)
-plot_head(model_ws, modelname_mf, Lx, Ly, nlayer=2)
-plot_btc(model_ws, obs_row, obs_col)
-plot_concPlume(model_ws, obs_row, obs_col, Lx, Ly, source_row, source_col, c0)
+plot_head(model_ws, modelname_mf, Lx, Ly, nlayer=5)
+# plot_btc(model_ws, obs_row, obs_col)
+# plot_concPlume(model_ws, obs_row, obs_col, Lx, Ly, source_row, source_col, c0)
 
-# ===== MODEL NAME =====
-alpha_list = [0.1,0.01,0.001, 0.0001, 0.00001,0.000001]
-import pandas as pd
-times = getTimes(model_ws)
-sens_data = pd.DataFrame({"time":times})
-for a in alpha_list:
-    mt, success_mt, buff_mt, spd = create_transport_model(
-        modelname_mt=modelname_mt,
-        model_ws=model_ws,
-        mf=mf,
-        param_dic=param_dic,
-        kd = 0.0001, alpha=a, lambda1 = 0.0, isothm = 4, ireact = 0, igetsc = 0
-    )
-    conc = getPointConc(model_ws, obs_row, obs_col)
-    sens_data[f"alpha_{a}"] = conc
-    
-dist = (obs_col - source_col)*delr # distance traveled
-q = head_dif/Lx # Darcy flow
-v = q / prsity # flow velocity
-Da_list = np.array(alpha_list) * (dist / v) #Damkohler number
-print(f'Damkohler Number for alpha={alpha_list} = {Da_list}')
-#%%
-# Plot BTC at observation point
-fig, ax = plt.subplots(figsize=(10, 6))
-
-ax.plot(sens_data["time"], sens_data["alpha_0.001"], linewidth=2, color = "blue", label = "0.001")
-ax.plot(sens_data["time"], sens_data["alpha_0.0001"], linewidth=2, color = "green", label = "0.0001")
-ax.plot(sens_data["time"], sens_data["alpha_1e-05"], linewidth=2, color = "gold", label = "0.00001")
-
-ax.set_xlabel('Time (days)', fontsize=12)
-ax.set_ylabel('Concentration', fontsize=12)
-ax.set_title(f'Breakthrough Curve at Observation Point (x={obs_col*10}m, y={obs_row*10}m)', 
-             fontsize=12)
-ax.grid(True, alpha=0.3)
-ax.set_xlim(0, times[-1])
-ax.set_ylim(0, None)
-ax.legend(title='Mass transfer parameter')
-plt.tight_layout()
-plt.savefig(f'breakthrough_curve_sensitivity_row{obs_row}_col{obs_col}.png', dpi=150)
-plt.show()
-
-#%%
-# Plot BTC at observation point
-fig, ax = plt.subplots(figsize=(10, 6))
-
-ax.plot(sens_data["time"], sens_data["alpha_0.1"], linewidth=2, color = "blue", label = "0.1")
-ax.plot(sens_data["time"], sens_data["alpha_0.01"], linewidth=2, color = "lightblue", label = "0.01")
-ax.plot(sens_data["time"], sens_data["alpha_0.001"], linewidth=2, color = "purple", label = "0.001")
-ax.plot(sens_data["time"], sens_data["alpha_0.0001"], linewidth=2, color = "green", label = "0.0001")
-ax.plot(sens_data["time"], sens_data["alpha_1e-05"], linewidth=2, color = "gold", label = "0.00001")
-ax.plot(sens_data["time"], sens_data["alpha_1e-06"], linewidth=2, color = "red", label = "0.000001")
-
-ax.set_xlabel('Time (days)', fontsize=12)
-ax.set_ylabel('Concentration', fontsize=12)
-ax.set_title(f'Breakthrough Curve at Observation Point (x={obs_col*10}m, y={obs_row*10}m)', 
-             fontsize=12)
-ax.grid(True, alpha=0.3)
-ax.set_xlim(0, times[-1])
-ax.set_ylim(0, None)
-ax.legend(title='Mass transfer parameter')
-plt.tight_layout()
-plt.savefig(f'breakthrough_curve_sensitivity_row{obs_row}_col{obs_col}.png', dpi=150)
-plt.show()

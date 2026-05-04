@@ -7,37 +7,55 @@ Created on Thu Apr 23 11:05:39 2026
 
 import numpy as np
 import os
+from load_head_file import *
+
 
 def load_flow_config():
 
     # ===== PATHS =====
-    exe_name_mf = r'C:\Users\hp\Documents\ModFlow\mf2005'
-    exe_name_mt = r'C:\Users\hp\Documents\ModFlow\mt3dms'
-
+    exe_name_mf = r'C:\Simcore\PM8\modflow2005\mf2005'
+    exe_name_mt = r'C:\Simcore\PM8\mt3dms\mt3dms5b'
+    
+    
+    # head file
+    headfile_L1 = "C:/Users/rappe/OneDrive/Documentos/Master Courses/EnvH/Griftpark/head_first_aquifer.tif"
+    
     # ===== SPATIAL DISCRETIZATION =====
-    Lx = 400.0
-    Ly = 700.0
+    # Lx = 400.0
+    # Ly = 700.0
 
     ztop = 0.0
     zbot = [-5, -15, -30, -50.0, -60.0, -100.0]
 
     nlay = 6 # LAYER 1-4 (first acquitard) LAYER 5 = confining clay layer LAYER 6 = 2nd acquitard
-    nrow = 70
-    ncol = 40
+    # nrow = 70
+    # ncol = 40
 
-    delr = Lx / ncol
-    delc = Ly / nrow
-
+    # delr = Lx / ncol
+    # delc = Ly / nrow
+    
+    # Load head field
+    data, delc, delr, ncol, nrow, Lx, Ly = load_head_field(headfile_L1)
+    
     # ===== BOUNDARY CONDITIONS =====
     ibound = np.ones((nlay, nrow, ncol), dtype=np.int32)
     ibound[:, :, 0] = -1
     ibound[:, :, -1] = -1
+    ibound[:, 0, :] = -1
+    ibound[:, -1, :] = -1
+    
+    # ADD NOflow boundaries for cement walls
+
 
     # ===== INITIAL HEAD =====
-    strt = np.ones((nlay, nrow, ncol), dtype=np.float32) * 25.0
-    strt[:, :, 0] = 25.0
-    strt[:, :, -1] = 24.5
+    # strt = np.ones((nlay, nrow, ncol), dtype=np.float32) * 25.0
+    # strt[:, :, 0] = 25.0
+    # strt[:, :, -1] = 24.5
     head_dif = 25.0 - 24.5
+    strt = data
+    
+    # Add head boundaries for second aquifer (layer 6)
+
     # ===== HYDRAULIC PARAMETERS =====
     # ===== FIRST FOR DIFFERENT LAYERS ===== --> BASED ON 1990 ARTICLE
     #hkLayer1 = 50 # 2500m^2 mentioned divided by layer thickness
@@ -110,6 +128,9 @@ def load_flow_config():
         # --- executables ---
         "exe_name_mf": exe_name_mf,
         "exe_name_mt": exe_name_mt,
+        
+        # --- input files ---
+        "headfile_L1": headfile_L1,
 
         # --- grid ---
         "nlay": nlay,

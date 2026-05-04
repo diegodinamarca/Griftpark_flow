@@ -110,7 +110,6 @@ def create_flow_model(modelname_mf, model_ws, param_dic):
         model_ws=model_ws
     )
     print(f"Created MODFLOW model: {modelname_mf}")
-
     # ===== DISCRETIZATION PACKAGE =====
     dis = flopy.modflow.ModflowDis(
         mf,
@@ -148,7 +147,7 @@ def create_flow_model(modelname_mf, model_ws, param_dic):
     print("LPF package created")
     
     # ===== RECHARGE PACKAGE ====== #
-    rch = flopy.modflow.ModflowRch(mf, rech=rech)
+    # rch = flopy.modflow.ModflowRch(mf, rech=rech)
 
     # ===== OUTPUT CONTROL PACKAGE =====
     stress_period_data = {}
