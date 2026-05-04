@@ -8,7 +8,7 @@ Created on Thu Apr 23 11:05:39 2026
 import numpy as np
 import os
 from load_head_file import *
-
+from load_walls import *
 
 def load_flow_config():
 
@@ -21,7 +21,9 @@ def load_flow_config():
     headfile_L1 = "C:/Users/rappe/OneDrive/Documentos/Master Courses/EnvH/Griftpark/head_L1.tif"
     headfile_L2 = "C:/Users/rappe/OneDrive/Documentos/Master Courses/EnvH/Griftpark/head_L2.tif"
     headfiles = [headfile_L1, headfile_L2]
-
+    
+    # walls files
+    walls_file = "C:/Users/rappe/OneDrive/Documentos/Master Courses/EnvH/Griftpark/cement_walls.tif"
     # ===== SPATIAL DISCRETIZATION =====
     # Lx = 400.0
     # Ly = 700.0
@@ -36,6 +38,11 @@ def load_flow_config():
     # delr = Lx / ncol
     # delc = Ly / nrow
     
+    # ===== INITIAL HEAD =====
+    # strt = np.ones((nlay, nrow, ncol), dtype=np.float32) * 25.0
+    # strt[:, :, 0] = 25.0
+    # strt[:, :, -1] = 24.5
+    # strt = data
     # Load head field
     delc, delr, ncol, nrow, Lx, Ly, left, bottom, right, top = get_common_extent(headfiles)  # to verify common extent and cell sizes
     data = get_clipped_head_data(headfiles)  # to get head data clipped to common extent
@@ -48,6 +55,7 @@ def load_flow_config():
     strt[4] = hdata
     hdata = data[1]  # Assuming headfile_L2 corresponds to the second layer (L2)
     strt[5] = hdata
+    
 
     # ===== BOUNDARY CONDITIONS =====
     ibound = np.ones((nlay, nrow, ncol), dtype=np.int32)
@@ -57,23 +65,26 @@ def load_flow_config():
     ibound[:, -1, :] = -1
     
     # ADD NOflow boundaries for cement walls
-
-
-    # ===== INITIAL HEAD =====
-    # strt = np.ones((nlay, nrow, ncol), dtype=np.float32) * 25.0
-    # strt[:, :, 0] = 25.0
-    # strt[:, :, -1] = 24.5
-    # strt = data
-    
-    # Add head boundaries for second aquifer (layer 6)
+    # load cement walls
+    walls = load_cementwalls(walls_file, left, bottom, right, top)    
 
     # ===== HYDRAULIC PARAMETERS =====
     # ===== FIRST FOR DIFFERENT LAYERS ===== --> BASED ON 1990 ARTICLE
-    #hkLayer1 = 50 # 2500m^2 mentioned divided by layer thickness
-    hkLayer2 = 0.01 # 1990 article says between 0.25 and 0.01
-    hkLayer3 = 50 # 2000m^2 mentioned divided by layer thickness
+    # hkLayer1 = 50 # 2500m^2 mentioned divided by layer thickness
+    # hkLayer2 = 0.01 # 1990 article says between 0.25 and 0.01
+    # hkLayer3 = 50 # 2000m^2 mentioned divided by layer thickness
+    # hk = [20, 20, 80, 40, hkLayer2, hkLayer3]
+
+    # list of K values, one per layer (length must equal nlay)
+    k_values = np.array([20, 20, 80, 40, 0.01, 50], dtype=float)
     
-    hk = [20, 20, 80, 40, hkLayer2, hkLayer3]
+    # hk has shape (nlay, nrow, ncol)
+    hk = np.ones((nlay, nrow, ncol), dtype=float) * k_values[:, None, None]
+    
+    # set low conductivity in first 4 layers where walls == 1
+    hk[:4, walls == 1] = 0.01
+    
+    # Assume vertical conductivity equal to horizontal
     vka = hk # ALSO ASSUMPTION
     ss = 0.0001
     laytyp = [1, 1, 1, 1, 0, 0] # 0=confined 1=unconfined
