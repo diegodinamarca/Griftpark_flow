@@ -12,7 +12,7 @@ import flopy
 from utils import *
 import pandas as pd
 
-def plot_head(model_ws, modelname_mf, Lx, Ly):
+def plot_head(model_ws, modelname_mf, Lx, Ly, nlayer):
     # ===== READ AND PLOT HYDRAULIC HEAD =====
     # Read the head file
     headfile = os.path.join(model_ws, modelname_mf + '.hds')
@@ -29,12 +29,12 @@ def plot_head(model_ws, modelname_mf, Lx, Ly):
     extent = (0, Lx, 0, Ly)
     
     # Plot head distribution
-    im = ax.imshow(head[0], extent=extent, origin='lower', cmap='viridis')
+    im = ax.imshow(head[nlayer], extent=extent, origin='lower', cmap='viridis')
     plt.colorbar(im, ax=ax, label='Hydraulic Head (m)')
     
     # Add contours
-    levels = np.linspace(np.min(head[0]), np.max(head[0]), 15)
-    cs = ax.contour(head[0], levels=levels, extent=extent, colors='white', 
+    levels = np.linspace(np.min(head[nlayer]), np.max(head[nlayer]), 15)
+    cs = ax.contour(head[nlayer], levels=levels, extent=extent, colors='white', 
                     linewidths=0.5, origin='lower')
     ax.clabel(cs, fmt='%.2f', fontsize=8)
     
@@ -44,7 +44,7 @@ def plot_head(model_ws, modelname_mf, Lx, Ly):
     ax.set_aspect('equal')
     
     plt.tight_layout()
-    plt.savefig(os.path.join(model_ws, 'head_distribution.png'), dpi=150)
+    plt.savefig(os.path.join(model_ws, f'head_distribution_layer{nlayer}.png'), dpi=150)
     plt.show()
     
     print(f"Head range: {np.min(head[0]):.2f} to {np.max(head[0]):.2f} m")

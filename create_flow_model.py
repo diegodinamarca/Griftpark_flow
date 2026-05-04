@@ -83,6 +83,7 @@ def create_flow_model(modelname_mf, model_ws, param_dic):
     hk = param_dic["hk"]
     vka = param_dic["vka"]
     ss = param_dic["ss"]
+    rech = param_dic["rech"]
 
     # ---------- Optional parameters ----------
     ipakcb = param_dic.get("ipakcb", 53)
@@ -145,6 +146,9 @@ def create_flow_model(modelname_mf, model_ws, param_dic):
         ss=ss
     )
     print("LPF package created")
+    
+    # ===== RECHARGE PACKAGE ====== #
+    rch = flopy.modflow.ModflowRch(mf, rech=rech)
 
     # ===== OUTPUT CONTROL PACKAGE =====
     stress_period_data = {}

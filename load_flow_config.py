@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+  # -*- coding: utf-8 -*-
 """
 Created on Thu Apr 23 11:05:39 2026
 
@@ -11,19 +11,19 @@ import os
 def load_flow_config():
 
     # ===== PATHS =====
-    exe_name_mf = r'C:\Simcore\PM8\modflow2005\mf2005'
-    exe_name_mt = r'C:\Simcore\PM8\mt3dms\mt3dms5b'
+    exe_name_mf = r'C:\Users\hp\Documents\ModFlow\mf2005'
+    exe_name_mt = r'C:\Users\hp\Documents\ModFlow\mt3dms'
 
     # ===== SPATIAL DISCRETIZATION =====
-    Lx = 1000.0
-    Ly = 500.0
+    Lx = 400.0
+    Ly = 700.0
 
-    ztop = 20.0
-    zbot = 0.0
+    ztop = 0.0
+    zbot = [-5, -15, -30, -50.0, -60.0, -100.0]
 
-    nlay = 2
-    nrow = 50
-    ncol = 100
+    nlay = 6 # LAYER 1-4 (first acquitard) LAYER 5 = confining clay layer LAYER 6 = 2nd acquitard
+    nrow = 70
+    ncol = 40
 
     delr = Lx / ncol
     delc = Ly / nrow
@@ -39,13 +39,21 @@ def load_flow_config():
     strt[:, :, -1] = 24.5
     head_dif = 25.0 - 24.5
     # ===== HYDRAULIC PARAMETERS =====
-    hk = 30.0
-    vka = 30.0
+    # ===== FIRST FOR DIFFERENT LAYERS ===== --> BASED ON 1990 ARTICLE
+    #hkLayer1 = 50 # 2500m^2 mentioned divided by layer thickness
+    hkLayer2 = 0.01 # 1990 article says between 0.25 and 0.01
+    hkLayer3 = 50 # 2000m^2 mentioned divided by layer thickness
+    
+    hk = [20, 20, 80, 40, hkLayer2, hkLayer3]
+    vka = hk # ALSO ASSUMPTION
     ss = 0.0001
-    laytyp = 0
+    laytyp = [1, 1, 1, 1, 0, 0] # 0=confined 1=unconfined
 
     # ===== TRANSPORT PARAMS (MT3DMS) =====
     prsity = 0.3
+    
+    # ===== RECHARGE ====== #
+    rech = 0.0025 # m/d Based on KNMI data from 2018-2025 at the bilt
 
     # ===== TIME DISCRETIZATION =====
     nper_mf = 2
@@ -132,6 +140,9 @@ def load_flow_config():
 
         # --- transport ---
         "prsity": prsity,
+        
+        # --- recharge ---
+        "rech" : rech,
 
         # --- optional ---
         "ipakcb": 53,

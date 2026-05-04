@@ -51,75 +51,10 @@ mt, success_mt, buff_mt, spd = create_transport_model(
     kd = 0.001, lambda1 = 0.0, isothm = 0, ireact = 0, igetsc = 0
 )
 
-plot_head(model_ws, modelname_mf, Lx, Ly)
+plot_head(model_ws, modelname_mf, Lx, Ly, nlayer=0)
+plot_head(model_ws, modelname_mf, Lx, Ly, nlayer=2)
 plot_btc(model_ws, obs_row, obs_col)
 plot_concPlume(model_ws, obs_row, obs_col, Lx, Ly, source_row, source_col, c0)
-
-#%%
-model_ws ="./model_eq_sorption"
-modelname_mf= "flow_model"
-modelname_mt = 'transport_eq_sorption'
-    
-mf, success, buff = create_flow_model(
-    modelname_mf=modelname_mf,
-    model_ws=model_ws,
-    param_dic=param_dic
-)
-mt, success_mt, buff_mt, spd = create_transport_model(
-    modelname_mt=modelname_mt,
-    model_ws=model_ws,
-    mf=mf,
-    param_dic=param_dic,
-    kd = 0.0001, alpha=0.3, lambda1 = 0.0, isothm = 1, ireact = 0, igetsc = 0
-)
-conc_nosorpt = getPointConc(model_ws, obs_row, obs_col)
-
-plot_head(model_ws, modelname_mf, Lx, Ly)
-plot_btc(model_ws, obs_row, obs_col)
-plot_concPlume(model_ws, obs_row, obs_col, Lx, Ly, source_row, source_col, c0)
-
-#%%
-model_ws ="./model_kin_sorption"
-modelname_mf= "flow_model"
-modelname_mt = 'transport_kin_sorption'
-
-mf, success, buff = create_flow_model(
-    modelname_mf=modelname_mf,
-    model_ws=model_ws,
-    param_dic=param_dic
-)
-
-# ===== MODEL NAME =====
-mt, success_mt, buff_mt, spd = create_transport_model(
-    modelname_mt=modelname_mt,
-    model_ws=model_ws,
-    mf=mf,
-    param_dic=param_dic,
-    kd = 0.0001, alpha=0.0001, lambda1 = 0.0, isothm = 4, ireact = 0, igetsc = 0
-)
-plot_head(model_ws, modelname_mf, Lx, Ly)
-plot_btc(model_ws, obs_row, obs_col)
-plot_concPlume(model_ws, obs_row, obs_col, Lx, Ly, source_row, source_col, c0)
-
-dist = (obs_col - source_col)*delr # distance traveled
-q = head_dif/Lx # Darcy flow
-v = q / prsity # flow velocity
-alpha=0.0001
-Da = alpha * dist / v #Damkohler number
-#%%
-plot_BTC_allmodels(obs_row, obs_col)
-#%%
-
-# =========== SENSITIVIY ANALYSIS FOR MASS TRANSFER =========
-model_ws ="./model_kin_sorption"
-modelname_mf= "flow_model"
-modelname_mt = 'transport_kin_sorption'
-
-mf, success, buff = create_flow_model(
-    modelname_mf=modelname_mf,
-    model_ws=model_ws,
-    param_dic=param_dic
-)
 
 # ===== MODEL NAME =====
 alpha_list = [0.1,0.01,0.001, 0.0001, 0.00001,0.000001]
