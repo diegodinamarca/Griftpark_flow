@@ -140,7 +140,8 @@ def load_flow_config():
     conc1 = load_init_conc(conc_sp1_file)
     conc2 = load_init_conc(conc_sp2_file)
     conc3 = load_init_conc(conc_sp3_file)
-
+    
+    # periods for injection of contaminants (not used)
     active_periods = [c0, 0.0]
     # active_periods = [c0]*100+[0.0]*100
 
