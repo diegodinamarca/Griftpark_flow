@@ -43,17 +43,16 @@ def load_flow_config():
     # strt[:, :, 0] = 25.0
     # strt[:, :, -1] = 24.5
     # strt = data
+    
     # Load head field
-    delc, delr, ncol, nrow, Lx, Ly, left, bottom, right, top = get_common_extent(headfiles)  # to verify common extent and cell sizes
-    data = get_clipped_head_data(headfiles)  # to get head data clipped to common extent
-    hdata = data[0]  # Assuming headfile_L1 corresponds to the first layer (L1)
+    data, delc, delr, ncol, nrow, Lx, Ly = load_head_field(headfile_L1)  # to get head data clipped to common extent
     strt = list(nlay * [np.zeros((nrow, ncol), dtype=np.float32)])
     strt[0] = hdata
     strt[1] = hdata
     strt[2] = hdata
     strt[3] = hdata
     strt[4] = hdata
-    hdata = data[1]  # Assuming headfile_L2 corresponds to the second layer (L2)
+    data, delc, delr, ncol, nrow, Lx, Ly = load_head_field(headfile_L2)   # Assuming headfile_L2 corresponds to the second layer (L2)
     strt[5] = hdata
     
 
