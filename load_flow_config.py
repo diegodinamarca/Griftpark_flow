@@ -13,17 +13,17 @@ from load_walls import *
 def load_flow_config():
 
     # ===== PATHS =====
-    exe_name_mf = r'C:\Simcore\PM8\modflow2005\mf2005'
-    exe_name_mt = r'C:\Simcore\PM8\mt3dms\mt3dms5b'
+    exe_name_mf = r'C:\Users\hp\Documents\ModFlow\mf2005'
+    exe_name_mt = r'C:\Users\hp\Documents\ModFlow\mt3dms'
 
 
     # head file
-    headfile_L1 = "C:/Users/rappe/OneDrive/Documentos/Master Courses/EnvH/Griftpark/head_L1.tif"
-    headfile_L2 = "C:/Users/rappe/OneDrive/Documentos/Master Courses/EnvH/Griftpark/head_L2.tif"
+    headfile_L1 = r"./assets/head_L1.tif"
+    headfile_L2 = r"./assets/head_L2.tif"
     headfiles = [headfile_L1, headfile_L2]
     
     # walls files
-    walls_file = "C:/Users/rappe/OneDrive/Documentos/Master Courses/EnvH/Griftpark/cement_walls.tif"
+    walls_file = r"./assets/cement_walls.tif"
     # ===== SPATIAL DISCRETIZATION =====
     # Lx = 400.0
     # Ly = 700.0
@@ -67,7 +67,19 @@ def load_flow_config():
     # ADD NOflow boundaries for cement walls
     # load cement walls
     walls = load_cementwalls(walls_file, left, bottom, right, top)    
-
+    
+    # ===== WELL INPUT ===== #
+    well20 = [2, 80, 100, -100] ### Layer, Row, Column, Flux
+    well21 = [2, 80, 120, -100] ### Layer, Row, Column, Flux
+    well22 = [2, 70, 110, -100] ### Layer, Row, Column, Flux
+    
+    wel_spd = {
+        0: [
+            well20,
+            well21,
+            well22,
+        ]
+    }    
     # ===== HYDRAULIC PARAMETERS =====
     # ===== FIRST FOR DIFFERENT LAYERS ===== --> BASED ON 1990 ARTICLE
     # hkLayer1 = 50 # 2500m^2 mentioned divided by layer thickness
@@ -162,6 +174,9 @@ def load_flow_config():
         "delc": delc,
         "ztop": ztop,
         "zbot": zbot,
+        
+        # --- well ---
+        "wel_spd": wel_spd,
 
         # --- time ---
         "nper_mf": nper_mf,
