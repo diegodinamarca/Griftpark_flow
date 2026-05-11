@@ -9,12 +9,13 @@ import numpy as np
 import os
 from load_head_file import *
 from load_walls import *
+from load_wells import *
 
 def load_flow_config():
 
     # ===== PATHS =====
-    exe_name_mf = r'C:\Users\hp\Documents\ModFlow\mf2005'
-    exe_name_mt = r'C:\Users\hp\Documents\ModFlow\mt3dms'
+    exe_name_mf = r'C:\Simcore\PM8\modflow2005\mf2005'
+    exe_name_mt = r'C:\Simcore\PM8\mt3dms\mt3dms5b'
 
 
     # head file
@@ -45,14 +46,14 @@ def load_flow_config():
     # strt = data
     
     # Load head field
-    data, delc, delr, ncol, nrow, Lx, Ly = load_head_field(headfile_L1)  # to get head data clipped to common extent
+    hdata, delc, delr, ncol, nrow, Lx, Ly = load_head_field(headfile_L1)  # to get head data clipped to common extent
     strt = list(nlay * [np.zeros((nrow, ncol), dtype=np.float32)])
     strt[0] = hdata
     strt[1] = hdata
     strt[2] = hdata
     strt[3] = hdata
     strt[4] = hdata
-    data, delc, delr, ncol, nrow, Lx, Ly = load_head_field(headfile_L2)   # Assuming headfile_L2 corresponds to the second layer (L2)
+    hdata, delc, delr, ncol, nrow, Lx, Ly = load_head_field(headfile_L2)   # Assuming headfile_L2 corresponds to the second layer (L2)
     strt[5] = hdata
     
 
@@ -63,24 +64,15 @@ def load_flow_config():
     ibound[:, 0, :] = -1
     ibound[:, -1, :] = -1
     
-    # ADD NOflow boundaries for cement walls
-    # load cement walls
-    walls = load_cementwalls(walls_file, left, bottom, right, top)    
-    
     # ===== WELL INPUT ===== #
     wells_file = "assets/wells.tif"
-    wel_spd = load_wells(wells_file, -50, [2]) 
-    # well20 = [2, 80, 100, -100] ### Layer, Row, Column, Flux
-    # well21 = [2, 80, 120, -100] ### Layer, Row, Column, Flux
-    # well22 = [2, 70, 110, -100] ### Layer, Row, Column, Flux
+    wel_spd = load_wells(wells_file, -50, [2])
     
-    # wel_spd = {
-    #     0: [
-    #         well20,
-    #         well21,
-    #         well22,
-    #     ]
-    # }    
+    # ===== CEMENT WALLS =====
+    # ADD NOflow boundaries for cement walls
+    # load cement walls
+    walls = load_cementwalls(walls_file)    
+
     # ===== HYDRAULIC PARAMETERS =====
     # ===== FIRST FOR DIFFERENT LAYERS ===== --> BASED ON 1990 ARTICLE
     # hkLayer1 = 50 # 2500m^2 mentioned divided by layer thickness
