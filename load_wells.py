@@ -33,10 +33,12 @@ def load_wells(file, pumping_rate, layers=None):
         layers = []
 
     with rasterio.open(file) as src:
-        arr = src.read(1)  # first raster band
+        data = src.read(1)  # first raster band
+        data = data[::-1, :]
+        
 
     # Find raster cells where value == 1
-    well_cells = np.argwhere(arr == 1)
+    well_cells = np.argwhere(data == 1)
 
     # Build stress period data for stress period 0
     spd = []
@@ -45,8 +47,8 @@ def load_wells(file, pumping_rate, layers=None):
         for lay in layers:
             spd.append([int(lay), int(row), int(col), pumping_rate])
 
-    return {0: spd}
+    return spd
 
 # filenam = "C:/Users/rappe/OneDrive/Documentos/Master Courses/EnvH/Griftpark/src/assets/wells.tif"
 # x = load_wells(filenam, 30, [3])
-# print(x)    
+# print(x)

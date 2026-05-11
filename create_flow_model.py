@@ -149,7 +149,6 @@ def create_flow_model(modelname_mf, model_ws, param_dic):
     # ===== RECHARGE PACKAGE ====== #
     # rch = flopy.modflow.ModflowRch(mf, rech=rech)
     
-    
     # ===== WELL PACKAGE =====
     wel_spd = param_dic.get("wel_spd", None)
     if wel_spd is not None:
@@ -158,7 +157,6 @@ def create_flow_model(modelname_mf, model_ws, param_dic):
             stress_period_data=wel_spd,
             ipakcb=ipakcb
         )
-
 
     # ===== OUTPUT CONTROL PACKAGE =====
     stress_period_data = {}
