@@ -40,13 +40,32 @@ mf, success, buff = create_flow_model(
     model_ws=model_ws,
     param_dic=param_dic
 )
-
-print(f"Model creation completed. Success: {success}")
-
+print(f"Flow model creation completed. Success: {success}")
 if success:
     plot_head(model_ws, modelname_mf, Lx, Ly, nlayer=0)
     plot_head(model_ws, modelname_mf, Lx, Ly, nlayer=5)
 else:
     print("Model run failed. Check the MODFLOW executable path and try again.")
     print("Buff:", buff)
+
+
+print("Running Transport model...")
+# ===== MODEL NAME =====
+mt, success_mt, buff_mt, spd = create_transport_model(
+    modelname_mt=modelname_mt,
+    model_ws=model_ws,
+    mf=mf,
+    param_dic=param_dic,
+    kd = 0.001, lambda1 = 0.0, isothm = 0, ireact = 0, igetsc = 0
+)
+
+print(f"Transport model creation completed. Success: {success}")
+if success:
+    plot_btc(model_ws, obs_row, obs_col)
+    plot_concPlume(model_ws, obs_row, obs_col, Lx, Ly, source_row, source_col, c0)
+else:
+    print("Model run failed. Check the MODFLOW executable path and try again.")
+    print("Buff:", buff)
+
+
 

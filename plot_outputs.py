@@ -49,7 +49,7 @@ def plot_head(model_ws, modelname_mf, Lx, Ly, nlayer):
     
     print(f"Head range: {np.min(head[0]):.2f} to {np.max(head[0]):.2f} m")
     
-def plot_btc(model_ws, obs_row, obs_col):
+def plot_btc(model_ws, obs_row, obs_col, nlayer):
     ucnfile = os.path.join(model_ws, 'MT3D001.UCN')
     ucnobj = flopy.utils.UcnFile(ucnfile)
     
@@ -62,7 +62,7 @@ def plot_btc(model_ws, obs_row, obs_col):
     # Get concentration at observation point for all times
     conc = ucnobj.get_alldata()
     print(conc.shape)
-    conc_obs = conc[:, 0, obs_row, obs_col]
+    conc_obs = conc[:, nlayer, obs_row, obs_col]
     
     ind = np.argmax(conc_obs)
     timeForMax = times_mt[ind]
@@ -75,14 +75,14 @@ def plot_btc(model_ws, obs_row, obs_col):
     ax.plot(times_mt, conc_obs, linewidth=2, color = "red", label = "No adsorption")
     ax.set_xlabel('Time (days)', fontsize=12)
     ax.set_ylabel('Concentration', fontsize=12)
-    ax.set_title(f'Breakthrough Curve at Observation Point (x={obs_col*10}m, y={obs_row*10}m)', 
+    ax.set_title(f'Breakthrough Curve at Observation Point (x={obs_col*10}m, y={obs_row*10}m), layer={nlayer}', 
                  fontsize=12)
     ax.grid(True, alpha=0.3)
     ax.set_xlim(0, times_mt[-1])
     ax.set_ylim(0, None)
     ax.legend(title='Concentration')
     plt.tight_layout()
-    plt.savefig(os.path.join(model_ws, f'breakthrough_curve_row{obs_row}_col{obs_col}.png'), dpi=150)
+    plt.savefig(os.path.join(model_ws, f'breakthrough_curve_row{obs_row}_col{obs_col}_layer{nlayer}.png'), dpi=150)
     plt.show()
     
     
