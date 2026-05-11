@@ -17,7 +17,9 @@ def load_cementwalls(file):
         data = np.where(data == nodata, 0, data)
         data = data[::-1, :]
         return(data)
-    
 
-        
+# filenam =  r"./assets/cement_walls.tif"
+# x = load_cementwalls(filenam)
+# print(x)
+
     
