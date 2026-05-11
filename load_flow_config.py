@@ -69,17 +69,19 @@ def load_flow_config():
     walls = load_cementwalls(walls_file, left, bottom, right, top)    
     
     # ===== WELL INPUT ===== #
-    well20 = [2, 80, 100, -100] ### Layer, Row, Column, Flux
-    well21 = [2, 80, 120, -100] ### Layer, Row, Column, Flux
-    well22 = [2, 70, 110, -100] ### Layer, Row, Column, Flux
+    wells_file = "assets/wells.tif"
+    wel_spd = load_wells(wells_file, -50, [2]) 
+    # well20 = [2, 80, 100, -100] ### Layer, Row, Column, Flux
+    # well21 = [2, 80, 120, -100] ### Layer, Row, Column, Flux
+    # well22 = [2, 70, 110, -100] ### Layer, Row, Column, Flux
     
-    wel_spd = {
-        0: [
-            well20,
-            well21,
-            well22,
-        ]
-    }    
+    # wel_spd = {
+    #     0: [
+    #         well20,
+    #         well21,
+    #         well22,
+    #     ]
+    # }    
     # ===== HYDRAULIC PARAMETERS =====
     # ===== FIRST FOR DIFFERENT LAYERS ===== --> BASED ON 1990 ARTICLE
     # hkLayer1 = 50 # 2500m^2 mentioned divided by layer thickness
