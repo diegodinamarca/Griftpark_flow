@@ -126,7 +126,44 @@ def plot_concPlume(model_ws, obs_row, obs_col, Lx, Ly, source_row, source_col, c
     
     print(f"Maximum concentration: {np.max(conc[0]):.2f}")
     print(f"Concentration at observation point: {conc[0, obs_row, obs_col]:.2f}")
+
+def plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0, nlayer, time_plot):
+    # Get concentration at final time
+    # time_plot = timeIndexForMaxConc(model_ws, obs_row, obs_col)
+    times = getTimes(model_ws)
+    conc = getConcMatrix(model_ws, timestp=time_plot)
     
+    # Create plot
+    fig, ax = plt.subplots(figsize=(10, 8))
+    
+    extent = (0, Lx/10, 0, Ly/10)
+    
+    # Plot concentration
+    im = ax.imshow(conc[nlayer], extent=extent, origin='lower', cmap='hot_r', 
+                   vmin=0, vmax=c0)
+    plt.colorbar(im, ax=ax, label='Concentration')
+    
+    # Add contours
+    levels = [1, 5, 10, 20, 40, 60, 80]
+    cs = ax.contour(conc[nlayer], levels=levels, extent=extent, colors='black', 
+                    linewidths=0.8, origin='lower')
+    ax.clabel(cs, fmt='%.0f', fontsize=8)
+    
+    # Mark observation point
+    ax.plot(obs_col, obs_row, 'bo', markersize=10, label='Observation')
+    
+    ax.set_xlabel('x (m)')
+    ax.set_ylabel('y (m)')
+    ax.set_title(f'Concentration Distribution at t = {times[time_plot]:.0f} days, layer={nlayer}')
+    ax.legend(loc='upper right')
+    ax.set_aspect('equal')
+    
+    plt.tight_layout()
+    plt.savefig(os.path.join(model_ws, f'concentration_final_layer{nlayer}.png'), dpi=150)
+    plt.show()
+    
+    print(f"Maximum concentration: {np.max(conc[0]):.2f}")
+    print(f"Concentration at observation point: {conc[nlayer, obs_row, obs_col]:.2f}")
 
 def plot_BTC_allmodels(obs_row, obs_col):
     

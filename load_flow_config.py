@@ -26,11 +26,19 @@ def load_flow_config():
     
     # walls files
     walls_file = r"./assets/cement_walls.tif"
+    
+    # wells file
+    wells_file = "assets/wells.tif"
+    
+    # initial concentrations
+    conc_sp1_file = "assets/masked_conc_sp1.tif"
+    conc_sp2_file = "assets/init_conc_sp2.tif"
+    conc_sp3_file = "assets/init_conc_sp3.tif"
     # ===== SPATIAL DISCRETIZATION =====
     # Lx = 400.0
     # Ly = 700.0
 
-    ztop = 0.0
+    ztop = 3.0
     zbot = [-5, -15, -35, -55.0, -60.0, -100.0]
 
     nlay = 6 # LAYER 1-4 (first acquitard) LAYER 5 = confining clay layer LAYER 6 = 2nd acquitard
@@ -66,9 +74,9 @@ def load_flow_config():
     ibound[:, -1, :] = -1
     
     # ===== WELL INPUT ===== #
-    wells_file = "assets/wells.tif"
-    wel_spd = load_wells(wells_file, -50, [2])
-    
+    wel_spd = {
+        0: load_wells(wells_file, 0, [2]),
+        1: load_wells(wells_file, -50, [2])}
     # ===== CEMENT WALLS =====
     # ADD NOflow boundaries for cement walls
     # load cement walls
@@ -127,9 +135,8 @@ def load_flow_config():
     ncomp = 1 # Number of contaminants
     c0 = 0.0 # source concentration
     sconc = 1.0     # initial concentration
-    conc_sp1_file = "assets/init_conc_sp1.tif"
-    conc_sp2_file = "assets/init_conc_sp2.tif"
-    conc_sp3_file = "assets/init_conc_sp3.tif"
+    
+    # files with initial concentrations for different contaminant species
     conc1 = load_init_conc(conc_sp1_file)
     conc2 = load_init_conc(conc_sp2_file)
     conc3 = load_init_conc(conc_sp3_file)
@@ -141,10 +148,9 @@ def load_flow_config():
     icbund = np.ones((nlay, nrow, ncol), dtype=np.int32)
     sconc_array = np.zeros((nlay, nrow, ncol), dtype=np.float32)
     # load initial concentrations to array
+    # we haven't figured out how to set more than one contaminant at the same time
     # sconcarray[target_layer, :, :] = conc
     sconc_array[0, :, :] = conc1
-    # sconc_array[1, 1, :, :] = conc2
-    # sconc_array[2, 3, :, :] = conc3
     
     # ===== OBSERVATION POINT =====
     obs_row = 25

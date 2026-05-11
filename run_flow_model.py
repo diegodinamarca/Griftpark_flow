@@ -43,6 +43,10 @@ mf, success, buff = create_flow_model(
 print(f"Flow model creation completed. Success: {success}")
 if success:
     plot_head(model_ws, modelname_mf, Lx, Ly, nlayer=0)
+    plot_head(model_ws, modelname_mf, Lx, Ly, nlayer=1)
+    plot_head(model_ws, modelname_mf, Lx, Ly, nlayer=2)
+    plot_head(model_ws, modelname_mf, Lx, Ly, nlayer=3)
+    plot_head(model_ws, modelname_mf, Lx, Ly, nlayer=4)
     plot_head(model_ws, modelname_mf, Lx, Ly, nlayer=5)
 else:
     print("Model run failed. Check the MODFLOW executable path and try again.")
@@ -61,11 +65,30 @@ mt, success_mt, buff_mt, spd = create_transport_model(
 
 print(f"Transport model creation completed. Success: {success}")
 if success:
-    plot_btc(model_ws, obs_row, obs_col)
+    plot_btc(model_ws, obs_row, obs_col,0)
     plot_concPlume(model_ws, obs_row, obs_col, Lx, Ly, source_row, source_col, c0)
 else:
     print("Model run failed. Check the MODFLOW executable path and try again.")
     print("Buff:", buff)
+
+#%%
+obs_row = 125
+obs_col = 117
+plot_btc(model_ws, obs_row, obs_col,0)    
+plot_btc(model_ws, obs_row, obs_col,1)
+plot_btc(model_ws, obs_row, obs_col,2)
+plot_btc(model_ws, obs_row, obs_col,3)
+plot_btc(model_ws, obs_row, obs_col,4)
+plot_btc(model_ws, obs_row, obs_col,5)
+#%%
+time_plot = 20
+plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=0, time_plot=time_plot)
+plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=1, time_plot=time_plot)
+plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=2, time_plot=time_plot)
+plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=3, time_plot=time_plot)
+plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=4, time_plot=time_plot)
+plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=5, time_plot=time_plot)
+
 
 
 
