@@ -9,6 +9,7 @@ import numpy as np
 import os
 from load_head_file import *
 from load_walls import *
+from load_wells import *
 
 def load_flow_config():
 
@@ -45,14 +46,14 @@ def load_flow_config():
     # strt = data
     
     # Load head field
-    data, delc, delr, ncol, nrow, Lx, Ly = load_head_field(headfile_L1)  # to get head data clipped to common extent
+    hdata, delc, delr, ncol, nrow, Lx, Ly = load_head_field(headfile_L1)  # to get head data clipped to common extent
     strt = list(nlay * [np.zeros((nrow, ncol), dtype=np.float32)])
     strt[0] = hdata
     strt[1] = hdata
     strt[2] = hdata
     strt[3] = hdata
     strt[4] = hdata
-    data, delc, delr, ncol, nrow, Lx, Ly = load_head_field(headfile_L2)   # Assuming headfile_L2 corresponds to the second layer (L2)
+    hdata, delc, delr, ncol, nrow, Lx, Ly = load_head_field(headfile_L2)   # Assuming headfile_L2 corresponds to the second layer (L2)
     strt[5] = hdata
     
 
@@ -65,7 +66,7 @@ def load_flow_config():
     
     # ADD NOflow boundaries for cement walls
     # load cement walls
-    walls = load_cementwalls(walls_file, left, bottom, right, top)    
+    walls = load_cementwalls(walls_file)    
     
     # ===== WELL INPUT ===== #
     wells_file = "assets/wells.tif"
@@ -94,8 +95,9 @@ def load_flow_config():
     # hk has shape (nlay, nrow, ncol)
     hk = np.ones((nlay, nrow, ncol), dtype=float) * k_values[:, None, None]
     
-    # set low conductivity in first 4 layers where walls == 1
+    # set low conductivity in first 5 layers where walls == 1
     hk[:4, walls == 1] = 0.01
+    # hk[:3] = np.where(walls[None, :, :] == 1, 0.01, hk[:3])
     
     # Assume vertical conductivity equal to horizontal
     vka = hk # ALSO ASSUMPTION
