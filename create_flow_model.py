@@ -78,6 +78,7 @@ def create_flow_model(modelname_mf, model_ws, param_dic):
 
     ibound = param_dic["ibound"]
     strt = param_dic["strt"]
+    strt = [i+3 for i in param_dic["strt"]]
 
     laytyp = param_dic["laytyp"]
     hk = param_dic["hk"]
@@ -149,14 +150,14 @@ def create_flow_model(modelname_mf, model_ws, param_dic):
     # ===== RECHARGE PACKAGE ====== #
     # rch = flopy.modflow.ModflowRch(mf, rech=rech)
     
-    # ===== WELL PACKAGE =====
-    wel_spd = param_dic.get("wel_spd", None)
-    if wel_spd is not None:
-        wel = flopy.modflow.ModflowWel(
-            mf,
-            stress_period_data=wel_spd,
-            ipakcb=ipakcb
-        )
+    # # ===== WELL PACKAGE =====
+    # wel_spd = param_dic.get("wel_spd", None)
+    # if wel_spd is not None:
+    #     wel = flopy.modflow.ModflowWel(
+    #         mf,
+    #         stress_period_data=wel_spd,
+    #         ipakcb=ipakcb
+    #     )
 
     # ===== OUTPUT CONTROL PACKAGE =====
     stress_period_data = {}

@@ -18,10 +18,9 @@ def load_flow_config():
     exe_name_mf = r'C:\Simcore\PM8\modflow2005\mf2005'
     exe_name_mt = r'C:\Simcore\PM8\mt3dms\mt3dms5b'
 
-
     # head file
-    headfile_L1 = r"./assets/head_L1.tif"
-    headfile_L2 = r"./assets/head_L2.tif"
+    headfile_L1 = r"./assets/head_L1c.tif"
+    headfile_L2 = r"./assets/head_L1c.tif"
     headfiles = [headfile_L1, headfile_L2]
     
     # walls files
@@ -35,24 +34,24 @@ def load_flow_config():
     conc_sp2_file = "assets/init_conc_sp2.tif"
     conc_sp3_file = "assets/init_conc_sp3.tif"
     # ===== SPATIAL DISCRETIZATION =====
-    # Lx = 400.0
-    # Ly = 700.0
+    
+    Lx = 910.0/2 #5m
+    Ly = 1340.0/2 #5m
 
     ztop = 3.0
     zbot = [-5, -15, -35, -55.0, -60.0, -100.0]
 
     nlay = 6 # LAYER 1-4 (first acquitard) LAYER 5 = confining clay layer LAYER 6 = 2nd acquitard
-    # nrow = 70
-    # ncol = 40
+    nrow = 134
+    ncol = 91
 
-    # delr = Lx / ncol
-    # delc = Ly / nrow
+    delr = 5
+    delc = 5
     
     # ===== INITIAL HEAD =====
-    # strt = np.ones((nlay, nrow, ncol), dtype=np.float32) * 25.0
-    # strt[:, :, 0] = 25.0
-    # strt[:, :, -1] = 24.5
-    # strt = data
+    strt = np.ones((nlay, nrow, ncol), dtype=np.float32) * 25.0
+    strt[:, :, 0] = 25.0
+    strt[:, :, -1] = 24.5
     
     # Load head field
     hdata, delc, delr, ncol, nrow, Lx, Ly = load_head_field(headfile_L1)  # to get head data clipped to common extent
@@ -64,7 +63,6 @@ def load_flow_config():
     strt[4] = hdata
     hdata, delc, delr, ncol, nrow, Lx, Ly = load_head_field(headfile_L2)   # Assuming headfile_L2 corresponds to the second layer (L2)
     strt[5] = hdata
-    print("Head data shape for L2:", hdata.shape)
 
     # ===== BOUNDARY CONDITIONS =====
     ibound = np.ones((nlay, nrow, ncol), dtype=np.int32)
