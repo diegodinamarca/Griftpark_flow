@@ -12,15 +12,15 @@ import flopy
 from utils import *
 import pandas as pd
 
-def plot_head(model_ws, modelname_mf, Lx, Ly, nlayer):
+def plot_head(model_ws, modelname_mf, Lx, Ly, nlayer, itime = -1):
     # ===== READ AND PLOT HYDRAULIC HEAD =====
     # Read the head file
     headfile = os.path.join(model_ws, modelname_mf + '.hds')
     hds = bf.HeadFile(headfile)
     
-    # Get head at the last time step
+    # Get head at the specified time step
     times = hds.get_times()
-    head = hds.get_data(totim=times[-1])
+    head = hds.get_data(totim=times[itime])
     
     # Create plot
     fig, ax = plt.subplots(figsize=(10, 8))
@@ -40,11 +40,11 @@ def plot_head(model_ws, modelname_mf, Lx, Ly, nlayer):
     
     ax.set_xlabel('x (m)')
     ax.set_ylabel('y (m)')
-    ax.set_title(f'Hydraulic Head Distribution at t = {times[-1]:.0f} days')
+    ax.set_title(f'Hydraulic Head Distribution at t = {times[itime]:.0f} days')
     ax.set_aspect('equal')
     
     plt.tight_layout()
-    plt.savefig(os.path.join(model_ws, f'head_distribution_layer{nlayer}.png'), dpi=150)
+    plt.savefig(os.path.join(model_ws, f'head_distribution_layer{nlayer}_t{times[itime]:.0f}.png'), dpi=150)
     plt.show()
     
     print(f"Head range: {np.min(head[0]):.2f} to {np.max(head[0]):.2f} m")
@@ -127,11 +127,11 @@ def plot_concPlume(model_ws, obs_row, obs_col, Lx, Ly, source_row, source_col, c
     print(f"Maximum concentration: {np.max(conc[0]):.2f}")
     print(f"Concentration at observation point: {conc[0, obs_row, obs_col]:.2f}")
 
-def plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0, nlayer, time_plot):
+def plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0, nlayer, itime):
     # Get concentration at final time
     # time_plot = timeIndexForMaxConc(model_ws, obs_row, obs_col)
     times = getTimes(model_ws)
-    conc = getConcMatrix(model_ws, timestp=time_plot)
+    conc = getConcMatrix(model_ws, timestp=times[itime])
     
     # Create plot
     fig, ax = plt.subplots(figsize=(10, 8))
@@ -154,12 +154,12 @@ def plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0, nlayer, time_plot):
     
     ax.set_xlabel('x (m)')
     ax.set_ylabel('y (m)')
-    ax.set_title(f'Concentration Distribution at t = {times[time_plot]:.0f} days, layer={nlayer}')
+    ax.set_title(f'Concentration Distribution at t = {times[itime]:.0f} days, layer={nlayer}')
     ax.legend(loc='upper right')
     ax.set_aspect('equal')
     
     plt.tight_layout()
-    plt.savefig(os.path.join(model_ws, f'concentration_final_layer{nlayer}.png'), dpi=150)
+    plt.savefig(os.path.join(model_ws, f'concentration_final_layer{nlayer}_t{times[itime]:.0f}.png'), dpi=150)
     plt.show()
     
     print(f"Maximum concentration: {np.max(conc[0]):.2f}")

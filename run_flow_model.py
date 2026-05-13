@@ -82,12 +82,12 @@ plot_btc(model_ws, obs_row, obs_col,4)
 plot_btc(model_ws, obs_row, obs_col,5)
 #%%
 time_plot = 20
-plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=0, time_plot=time_plot)
-plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=1, time_plot=time_plot)
-plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=2, time_plot=time_plot)
-plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=3, time_plot=time_plot)
-plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=4, time_plot=time_plot)
-plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=5, time_plot=time_plot)
+plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=0, itime=time_plot)
+plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=1, itime=time_plot)
+plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=2, itime=time_plot)
+plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=3, itime=time_plot)
+plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=4, itime=time_plot)
+plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=5, itime=time_plot)
 
 
 
