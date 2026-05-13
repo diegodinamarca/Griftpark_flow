@@ -52,6 +52,7 @@ else:
     print("Model run failed. Check the MODFLOW executable path and try again.")
     print("Buff:", buff)
 
+#%%
 
 print("Running Transport model...")
 # ===== MODEL NAME =====

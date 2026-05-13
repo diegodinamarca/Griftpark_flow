@@ -15,14 +15,15 @@ from load_init_conc import *
 def load_flow_config():
 
     # ===== PATHS =====
-    exe_name_mf = r'C:\Users\hp\Documents\ModFlow\mf2005'
-    exe_name_mt = r'C:\Users\hp\Documents\ModFlow\mt3dms'
+    exe_name_mf = r'C:\Simcore\PM8\modflow2005\mf2005'
+    exe_name_mt = r'C:\Simcore\PM8\mt3dms\mt3dms5b'
 
 
     # head file
     headfile_L1 = r"./assets/head_L1.tif"
+    headfile_L1 = r"C:\Users\rappe\OneDrive\Documentos\Master Courses\EnvH\Griftpark\local_assets\head_L1_test_mask.tif"
     headfile_L2 = r"./assets/head_L2.tif"
-    headfiles = [headfile_L1, headfile_L2]
+    headfile_L2 = headfile_L1
     
     # walls files
     walls_file = r"./assets/cement_walls.tif"
@@ -64,6 +65,7 @@ def load_flow_config():
     strt[4] = hdata
     hdata, delc, delr, ncol, nrow, Lx, Ly = load_head_field(headfile_L2)   # Assuming headfile_L2 corresponds to the second layer (L2)
     strt[5] = hdata
+    
     
 
     # ===== BOUNDARY CONDITIONS =====
