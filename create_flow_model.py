@@ -78,6 +78,7 @@ def create_flow_model(modelname_mf, model_ws, param_dic):
 
     ibound = param_dic["ibound"]
     strt = param_dic["strt"]
+    #strt = [i+3 for i in param_dic["strt"]]
 
     laytyp = param_dic["laytyp"]
     hk = param_dic["hk"]
@@ -126,7 +127,8 @@ def create_flow_model(modelname_mf, model_ws, param_dic):
         steady=steady_list
     )
     print("DIS package created")
-
+    print(f"Model grid: {nlay} layers, {nrow} rows, {ncol} columns")
+    print(f"ibound shape: {ibound.shape}, strt shape: {strt[0].shape}")
     # ===== BASIC PACKAGE =====
     bas = flopy.modflow.ModflowBas(
         mf,

@@ -4,8 +4,8 @@ Created on Mon May 11 11:29:05 2026
 
 @author: rappe
 """
-
-def load_wells(file, pumping_rate, layers=None):
+from utils import applyMask
+def load_wells(file, pumping_rate, layers=None, mask=None):
     """
     Read a raster (.tif) with value 1 at well locations and return
     FloPy-style well stress period data.
@@ -35,18 +35,20 @@ def load_wells(file, pumping_rate, layers=None):
     with rasterio.open(file) as src:
         data = src.read(1)  # first raster band
         data = data[::-1, :]
-        
+        if mask is not None:
+            data, transform = applyMask(file, mask, crop=True)
+            data = data[0, :, :]  # applyMask returns a list of arrays, we take the first one
 
     # Find raster cells where value == 1
     well_cells = np.argwhere(data == 1)
-
+    
     # Build stress period data for stress period 0
     spd = []
 
     for row, col in well_cells:
         for lay in layers:
             spd.append([int(lay), int(row), int(col), pumping_rate])
-
+    print("Spd: ",spd)
     return spd
 
 # filenam = "C:/Users/rappe/OneDrive/Documentos/Master Courses/EnvH/Griftpark/src/assets/wells.tif"

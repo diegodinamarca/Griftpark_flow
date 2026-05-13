@@ -7,18 +7,30 @@ Created on Mon May  4 14:16:02 2026
 
 import rasterio
 import numpy as np
-def load_head_field(headfile):
+from utils import applyMask
+
+def load_head_field(headfile, mask=None):
     with rasterio.open(headfile) as src:
         data = src.read(1)
         transform = src.transform
         nodata = src.nodata
+        ncol = data.shape[1]   # columnas (x)
+        nrow = data.shape[0]
+        # print(f"Original head data shape: {data.shape}, nodata value: {nodata}")
+
+    if mask is not None:
+        data, transform = applyMask(headfile, mask, crop=True)
+        if data.ndim == 3 and data.shape[0] == 1:
+            data = data[0]
+        # dimensiones en número de celdas
+        ncol = data.shape[1]   # columnas (x)
+        nrow = data.shape[0]   # filas (y)
+        # print(f"Head data shape after masking: {data.shape}")
     
     data = np.where(data == nodata, 0, data)
     data = data[::-1, :]
-    # dimensiones en número de celdas
-    ncol = src.width   # columnas (x)
-    nrow  = src.height  # filas (y)
 
+    # print(("data sample", data[0:5, 0:5]))
     # tamaño de celda
     delc = transform.a
     delr = -transform.e  # suele ser negativo → lo hacemos positivo

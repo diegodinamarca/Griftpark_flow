@@ -33,8 +33,14 @@ def plot_head(model_ws, modelname_mf, Lx, Ly, nlayer, itime = -1):
     plt.colorbar(im, ax=ax, label='Hydraulic Head (m)')
     
     # Add contours
-    levels = np.linspace(np.min(head[nlayer]), np.max(head[nlayer]), 15)
-    cs = ax.contour(head[nlayer], levels=levels, extent=extent, colors='white', 
+    head_layer = head[nlayer]
+    levels = np.linspace(np.min(head_layer), np.max(head_layer), 15)
+    levels = np.linspace(np.min(head_layer), -2.4, 15)
+    levels = np.sort(np.unique(levels))
+    
+    if levels.size == 1:
+        levels = [levels[0]]
+    cs = ax.contour(head_layer, levels=levels, extent=extent, colors='white', 
                     linewidths=0.5, origin='lower')
     ax.clabel(cs, fmt='%.2f', fontsize=8)
     
@@ -128,10 +134,12 @@ def plot_concPlume(model_ws, obs_row, obs_col, Lx, Ly, source_row, source_col, c
     print(f"Concentration at observation point: {conc[0, obs_row, obs_col]:.2f}")
 
 def plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0, nlayer, itime):
-    # Get concentration at final time
+    # Get concentration at requested time index
     # time_plot = timeIndexForMaxConc(model_ws, obs_row, obs_col)
     times = getTimes(model_ws)
-    conc = getConcMatrix(model_ws, timestp=times[itime])
+    if isinstance(itime, float):
+        itime = int(itime)
+    conc = getConcMatrix(model_ws, timestp=itime)
     
     # Create plot
     fig, ax = plt.subplots(figsize=(10, 8))

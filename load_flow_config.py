@@ -21,10 +21,8 @@ def load_flow_config():
 
     # head file
     headfile_L1 = r"./assets/head_L1.tif"
-    headfile_L1 = r"C:\Users\rappe\OneDrive\Documentos\Master Courses\EnvH\Griftpark\local_assets\head_L1_test_mask.tif"
     headfile_L2 = r"./assets/head_L2.tif"
-    headfile_L2 = headfile_L1
-    
+
     # walls files
     walls_file = r"./assets/cement_walls.tif"
     
@@ -33,40 +31,40 @@ def load_flow_config():
     
     # initial concentrations
     conc_sp1_file = "assets/masked_conc_sp1.tif"
-    conc_sp2_file = "assets/init_conc_sp2.tif"
-    conc_sp3_file = "assets/init_conc_sp3.tif"
+    # conc_sp2_file = "assets/init_conc_sp2.tif"
+    # conc_sp3_file = "assets/init_conc_sp3.tif"
+    
     # ===== SPATIAL DISCRETIZATION =====
-    # Lx = 400.0
-    # Ly = 700.0
+    
+    # Lx = 910.0/2 #5m
+    # Ly = 1340.0/2 #5m
 
-    ztop = 3.0
+    ztop = 0
     zbot = [-5, -15, -35, -55.0, -60.0, -100.0]
 
     nlay = 6 # LAYER 1-4 (first acquitard) LAYER 5 = confining clay layer LAYER 6 = 2nd acquitard
-    # nrow = 70
-    # ncol = 40
+    # nrow = 134
+    # ncol = 91
 
-    # delr = Lx / ncol
-    # delc = Ly / nrow
+    # delr = 5
+    # delc = 5
     
     # ===== INITIAL HEAD =====
     # strt = np.ones((nlay, nrow, ncol), dtype=np.float32) * 25.0
     # strt[:, :, 0] = 25.0
     # strt[:, :, -1] = 24.5
-    # strt = data
     
     # Load head field
-    hdata, delc, delr, ncol, nrow, Lx, Ly = load_head_field(headfile_L1)  # to get head data clipped to common extent
+    mask_file = r"C:\Users\rappe\OneDrive\Documentos\Master Courses\EnvH\Griftpark\local_assets\study_area_extent_100m.geojson"
+    hdata, delc, delr, ncol, nrow, Lx, Ly = load_head_field(headfile_L1, mask=mask_file)  # to get head data clipped to common extent
     strt = list(nlay * [np.zeros((nrow, ncol), dtype=np.float32)])
     strt[0] = hdata
     strt[1] = hdata
     strt[2] = hdata
     strt[3] = hdata
     strt[4] = hdata
-    hdata, delc, delr, ncol, nrow, Lx, Ly = load_head_field(headfile_L2)   # Assuming headfile_L2 corresponds to the second layer (L2)
+    hdata, delc, delr, ncol, nrow, Lx, Ly = load_head_field(headfile_L2, mask=mask_file)   # Assuming headfile_L2 corresponds to the second layer (L2)
     strt[5] = hdata
-    
-    
 
     # ===== BOUNDARY CONDITIONS =====
     ibound = np.ones((nlay, nrow, ncol), dtype=np.int32)
@@ -77,28 +75,15 @@ def load_flow_config():
     
     # ===== WELL INPUT ===== #
     wel_spd = {
-        0: load_wells(wells_file, 0, [2]),
-        1: load_wells(wells_file, -50, [2])}
+        0: load_wells(wells_file, 0, [2], mask=mask_file),
+        1: load_wells(wells_file, -200, [2], mask=mask_file)
+        }
     # ===== CEMENT WALLS =====
 
     # ADD NOflow boundaries for cement walls
     # load cement walls
-    walls = load_cementwalls(walls_file)    
-    
-    # ===== WELL INPUT ===== #
-    wells_file = "assets/wells.tif"
-    wel_spd = load_wells(wells_file, -50, [2]) 
-    # well20 = [2, 80, 100, -100] ### Layer, Row, Column, Flux
-    # well21 = [2, 80, 120, -100] ### Layer, Row, Column, Flux
-    # well22 = [2, 70, 110, -100] ### Layer, Row, Column, Flux
-    
-    # wel_spd = {
-    #     0: [
-    #         well20,
-    #         well21,
-    #         well22,
-    #     ]
-    # }    
+    walls = load_cementwalls(walls_file, mask=mask_file)    
+     
     # ===== HYDRAULIC PARAMETERS =====
     # ===== FIRST FOR DIFFERENT LAYERS ===== --> BASED ON 1990 ARTICLE
     # hkLayer1 = 50 # 2500m^2 mentioned divided by layer thickness
@@ -112,9 +97,10 @@ def load_flow_config():
     # hk has shape (nlay, nrow, ncol)
     hk = np.ones((nlay, nrow, ncol), dtype=float) * k_values[:, None, None]
     
-    # set low conductivity in first 5 layers where walls == 1
-    hk[:4, walls == 1] = 0.01
-    # hk[:3] = np.where(walls[None, :, :] == 1, 0.01, hk[:3])
+    # set low conductivity in first 4 layers where walls == 1
+    wall_mask = (walls == 1)
+    for ilay in range(4):
+        hk[ilay, :, :][wall_mask] = 0.01
     
     # Assume vertical conductivity equal to horizontal
     vka = hk # ALSO ASSUMPTION
@@ -156,8 +142,8 @@ def load_flow_config():
     
     # files with initial concentrations for different contaminant species
     conc1 = load_init_conc(conc_sp1_file)
-    conc2 = load_init_conc(conc_sp2_file)
-    conc3 = load_init_conc(conc_sp3_file)
+    # conc2 = load_init_conc(conc_sp2_file)
+    # conc3 = load_init_conc(conc_sp3_file)
     
     # periods for injection of contaminants (not used)
     active_periods = [c0, 0.0]
@@ -169,7 +155,7 @@ def load_flow_config():
     # load initial concentrations to array
     # we haven't figured out how to set more than one contaminant at the same time
     # sconcarray[target_layer, :, :] = conc
-    sconc_array[0, :, :] = conc1
+    # sconc_array[0, :, :] = conc1
     
     # ===== OBSERVATION POINT =====
     obs_row = 25
