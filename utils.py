@@ -158,3 +158,21 @@ def exportImage(out_image, out_transform, output_file, src_file):
     print(f"Exporting masked image to {output_file}")
     with rasterio.open(output_file, "w", **out_meta) as dest:
         dest.write(out_image)
+        
+def save_array_to_raster(array, reference_raster_path, output_path):
+    """
+    Saves a 2D numpy array as a GeoTIFF raster using metadata from a reference raster.
+    
+    Args:
+    - array: 2D numpy array (height, width) with values to save.
+    - reference_raster_path: Path to reference .tif for CRS, transform, etc.
+    - output_path: Path to save the new raster.
+    """
+    with rasterio.open(reference_raster_path) as ref:
+        profile = ref.profile
+        profile.update(count=1, dtype=array.dtype)  # Single band, match array dtype
+        
+        array_3d = np.expand_dims(array, axis=0)  # Add band dimension: (1, height, width)
+        
+        with rasterio.open(output_path, 'w', **profile) as dst:
+            dst.write(array_3d)

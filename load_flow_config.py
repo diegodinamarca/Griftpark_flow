@@ -30,30 +30,32 @@ def load_flow_config():
     
     # wells file
     wells_file = "assets/wells.tif"
+    wells_file = r"C:\Users\rappe\OneDrive\Documentos\Master Courses\EnvH\Griftpark\local_assets\wells_test.tif"
     
     # initial concentrations
     conc_sp1_file = "assets/masked_conc_sp1.tif"
-    conc_sp2_file = "assets/init_conc_sp2.tif"
-    conc_sp3_file = "assets/init_conc_sp3.tif"
+    # conc_sp2_file = "assets/init_conc_sp2.tif"
+    # conc_sp3_file = "assets/init_conc_sp3.tif"
+    
     # ===== SPATIAL DISCRETIZATION =====
     
-    Lx = 910.0/2 #5m
-    Ly = 1340.0/2 #5m
+    # Lx = 910.0/2 #5m
+    # Ly = 1340.0/2 #5m
 
-    ztop = 3.0
+    ztop = 0
     zbot = [-5, -15, -35, -55.0, -60.0, -100.0]
 
     nlay = 6 # LAYER 1-4 (first acquitard) LAYER 5 = confining clay layer LAYER 6 = 2nd acquitard
-    nrow = 134
-    ncol = 91
+    # nrow = 134
+    # ncol = 91
 
-    delr = 5
-    delc = 5
+    # delr = 5
+    # delc = 5
     
     # ===== INITIAL HEAD =====
-    strt = np.ones((nlay, nrow, ncol), dtype=np.float32) * 25.0
-    strt[:, :, 0] = 25.0
-    strt[:, :, -1] = 24.5
+    # strt = np.ones((nlay, nrow, ncol), dtype=np.float32) * 25.0
+    # strt[:, :, 0] = 25.0
+    # strt[:, :, -1] = 24.5
     
     # Load head field
     mask_file = r"C:\Users\rappe\OneDrive\Documentos\Master Courses\EnvH\Griftpark\local_assets\study_area_extent_100m.geojson"
@@ -76,8 +78,9 @@ def load_flow_config():
     
     # ===== WELL INPUT ===== #
     wel_spd = {
-        0: load_wells(wells_file, 0, [2]),
-        1: load_wells(wells_file, -50, [2])}
+        0: load_wells(wells_file, 0, [2], mask=mask_file),
+        1: load_wells(wells_file, -200, [2], mask=mask_file)
+        }
     # ===== CEMENT WALLS =====
 
     # ADD NOflow boundaries for cement walls

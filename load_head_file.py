@@ -16,7 +16,7 @@ def load_head_field(headfile, mask=None):
         nodata = src.nodata
         ncol = data.shape[1]   # columnas (x)
         nrow = data.shape[0]
-        print(f"Original head data shape: {data.shape}, nodata value: {nodata}")
+        # print(f"Original head data shape: {data.shape}, nodata value: {nodata}")
 
     if mask is not None:
         data, transform = applyMask(headfile, mask, crop=True)
@@ -25,12 +25,12 @@ def load_head_field(headfile, mask=None):
         # dimensiones en número de celdas
         ncol = data.shape[1]   # columnas (x)
         nrow = data.shape[0]   # filas (y)
-        print(f"Head data shape after masking: {data.shape}")
+        # print(f"Head data shape after masking: {data.shape}")
     
     data = np.where(data == nodata, 0, data)
     data = data[::-1, :]
 
-    print(("data sample", data[0:5, 0:5]))
+    # print(("data sample", data[0:5, 0:5]))
     # tamaño de celda
     delc = transform.a
     delr = -transform.e  # suele ser negativo → lo hacemos positivo

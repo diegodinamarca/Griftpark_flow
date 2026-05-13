@@ -41,6 +41,7 @@ mf, success, buff = create_flow_model(
     model_ws=model_ws,
     param_dic=param_dic
 )
+#%%
 print(f"Flow model creation completed. Success: {success}")
 if success:
     plot_head(model_ws, modelname_mf, Lx, Ly, nlayer=0)

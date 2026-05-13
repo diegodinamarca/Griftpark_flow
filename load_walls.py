@@ -17,14 +17,11 @@ def load_cementwalls(file, mask=None):
 
     if mask is not None:
         data, transform = applyMask(file, mask, crop=True)
-        print(f"data.shape after masking: {data.shape}")
         data = data[0, :, :]  # applyMask returns a list of arrays, we take the first one
-        print(f"Cement walls data shape after masking: {data.shape}")
 
     # Handle nodata values and flip y axis
     data = np.where(data == nodata, 0, data)
     data = data[::-1, :]
-    print(f"Cement walls data shape after nodata handling and flipping: {data.shape}")
 
     return(data)
 

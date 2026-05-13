@@ -35,7 +35,9 @@ def plot_head(model_ws, modelname_mf, Lx, Ly, nlayer, itime = -1):
     # Add contours
     head_layer = head[nlayer]
     levels = np.linspace(np.min(head_layer), np.max(head_layer), 15)
+    levels = np.linspace(np.min(head_layer), -2.4, 15)
     levels = np.sort(np.unique(levels))
+    
     if levels.size == 1:
         levels = [levels[0]]
     cs = ax.contour(head_layer, levels=levels, extent=extent, colors='white', 
