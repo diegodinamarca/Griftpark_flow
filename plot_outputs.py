@@ -33,8 +33,12 @@ def plot_head(model_ws, modelname_mf, Lx, Ly, nlayer, itime = -1):
     plt.colorbar(im, ax=ax, label='Hydraulic Head (m)')
     
     # Add contours
-    levels = np.linspace(np.min(head[nlayer]), np.max(head[nlayer]), 15)
-    cs = ax.contour(head[nlayer], levels=levels, extent=extent, colors='white', 
+    head_layer = head[nlayer]
+    levels = np.linspace(np.min(head_layer), np.max(head_layer), 15)
+    levels = np.sort(np.unique(levels))
+    if levels.size == 1:
+        levels = [levels[0]]
+    cs = ax.contour(head_layer, levels=levels, extent=extent, colors='white', 
                     linewidths=0.5, origin='lower')
     ax.clabel(cs, fmt='%.2f', fontsize=8)
     

@@ -52,45 +52,46 @@ if success:
 else:
     print("Model run failed. Check the MODFLOW executable path and try again.")
     print("Buff:", buff)
-#%%
 
-print("Running Transport model...")
-# ===== MODEL NAME =====
-mt, success_mt, buff_mt, spd = create_transport_model(
-    modelname_mt=modelname_mt,
-    model_ws=model_ws,
-    mf=mf,
-    param_dic=param_dic,
-    kd = 0.001, lambda1 = 0.0, isothm = 0, ireact = 0, igetsc = 0
-)
+# #%%
 
-print(f"Transport model creation completed. Success: {success}")
-if success:
-    plot_btc(model_ws, obs_row, obs_col,0)
-    plot_concPlume(model_ws, obs_row, obs_col, Lx, Ly, source_row, source_col, c0)
-else:
-    print("Model run failed. Check the MODFLOW executable path and try again.")
-    print("Buff:", buff)
+# print("Running Transport model...")
+# # ===== MODEL NAME =====
+# mt, success_mt, buff_mt, spd = create_transport_model(
+#     modelname_mt=modelname_mt,
+#     model_ws=model_ws,
+#     mf=mf,
+#     param_dic=param_dic,
+#     kd = 0.001, lambda1 = 0.0, isothm = 0, ireact = 0, igetsc = 0
+# )
 
-#%%
-# well locations [layer, row, col, pumping_rate]
-# [[3, 72, 54, 30], [3, 93, 37, 30], [3, 100, 47, 30]]
-obs_row = 72
-obs_col = 54
-plot_btc(model_ws, obs_row, obs_col,0)    
-plot_btc(model_ws, obs_row, obs_col,1)
-plot_btc(model_ws, obs_row, obs_col,2)
-plot_btc(model_ws, obs_row, obs_col,3)
-plot_btc(model_ws, obs_row, obs_col,4)
-plot_btc(model_ws, obs_row, obs_col,5)
-#%%
-time_plot = 20
-plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=0, itime=time_plot)
-plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=1, itime=time_plot)
-plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=2, itime=time_plot)
-plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=3, itime=time_plot)
-plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=4, itime=time_plot)
-plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=5, itime=time_plot)
+# print(f"Transport model creation completed. Success: {success}")
+# if success:
+#     plot_btc(model_ws, obs_row, obs_col,0)
+#     plot_concPlume(model_ws, obs_row, obs_col, Lx, Ly, source_row, source_col, c0)
+# else:
+#     print("Model run failed. Check the MODFLOW executable path and try again.")
+#     print("Buff:", buff)
+
+# #%%
+# # well locations [layer, row, col, pumping_rate]
+# # [[3, 72, 54, 30], [3, 93, 37, 30], [3, 100, 47, 30]]
+# obs_row = 72
+# obs_col = 54
+# plot_btc(model_ws, obs_row, obs_col,0)    
+# plot_btc(model_ws, obs_row, obs_col,1)
+# plot_btc(model_ws, obs_row, obs_col,2)
+# plot_btc(model_ws, obs_row, obs_col,3)
+# plot_btc(model_ws, obs_row, obs_col,4)
+# plot_btc(model_ws, obs_row, obs_col,5)
+# #%%
+# time_plot = 20
+# plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=0, itime=time_plot)
+# plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=1, itime=time_plot)
+# plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=2, itime=time_plot)
+# plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=3, itime=time_plot)
+# plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=4, itime=time_plot)
+# plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=5, itime=time_plot)
 
 
 
