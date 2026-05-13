@@ -5,6 +5,7 @@ Created on Thu Apr 23 11:06:58 2026
 @author: rappe
 """
 
+#%%
 from load_flow_config import load_flow_config
 from create_flow_model import create_flow_model
 from create_transport_model import create_transport_model
@@ -72,8 +73,10 @@ else:
     print("Buff:", buff)
 
 #%%
-obs_row = 125
-obs_col = 117
+# well locations [layer, row, col, pumping_rate]
+# [[3, 72, 54, 30], [3, 93, 37, 30], [3, 100, 47, 30]]
+obs_row = 72
+obs_col = 54
 plot_btc(model_ws, obs_row, obs_col,0)    
 plot_btc(model_ws, obs_row, obs_col,1)
 plot_btc(model_ws, obs_row, obs_col,2)
@@ -92,3 +95,5 @@ plot_conc(model_ws, obs_row, obs_col, Lx, Ly, c0=1, nlayer=5, itime=time_plot)
 
 
 
+
+# %%

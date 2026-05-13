@@ -49,6 +49,6 @@ def load_wells(file, pumping_rate, layers=None):
 
     return spd
 
-# filenam = "C:/Users/rappe/OneDrive/Documentos/Master Courses/EnvH/Griftpark/src/assets/wells.tif"
-# x = load_wells(filenam, 30, [3])
-# print(x)
+filenam = "C:/Users/rappe/OneDrive/Documentos/Master Courses/EnvH/Griftpark/src/assets/wells.tif"
+x = load_wells(filenam, 30, [3])
+print(x)

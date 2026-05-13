@@ -15,8 +15,8 @@ from load_init_conc import *
 def load_flow_config():
 
     # ===== PATHS =====
-    exe_name_mf = r'C:\Users\hp\Documents\ModFlow\mf2005'
-    exe_name_mt = r'C:\Users\hp\Documents\ModFlow\mt3dms'
+    exe_name_mf = r'C:\Simcore\PM8\modflow2005\mf2005'
+    exe_name_mt = r'C:\Simcore\PM8\mt3dms\mt3dms5b'
 
 
     # head file
@@ -64,7 +64,7 @@ def load_flow_config():
     strt[4] = hdata
     hdata, delc, delr, ncol, nrow, Lx, Ly = load_head_field(headfile_L2)   # Assuming headfile_L2 corresponds to the second layer (L2)
     strt[5] = hdata
-    
+    print("Head data shape for L2:", hdata.shape)
 
     # ===== BOUNDARY CONDITIONS =====
     ibound = np.ones((nlay, nrow, ncol), dtype=np.int32)
@@ -82,21 +82,7 @@ def load_flow_config():
     # ADD NOflow boundaries for cement walls
     # load cement walls
     walls = load_cementwalls(walls_file)    
-    
-    # ===== WELL INPUT ===== #
-    wells_file = "assets/wells.tif"
-    wel_spd = load_wells(wells_file, -50, [2]) 
-    # well20 = [2, 80, 100, -100] ### Layer, Row, Column, Flux
-    # well21 = [2, 80, 120, -100] ### Layer, Row, Column, Flux
-    # well22 = [2, 70, 110, -100] ### Layer, Row, Column, Flux
-    
-    # wel_spd = {
-    #     0: [
-    #         well20,
-    #         well21,
-    #         well22,
-    #     ]
-    # }    
+     
     # ===== HYDRAULIC PARAMETERS =====
     # ===== FIRST FOR DIFFERENT LAYERS ===== --> BASED ON 1990 ARTICLE
     # hkLayer1 = 50 # 2500m^2 mentioned divided by layer thickness
@@ -112,7 +98,6 @@ def load_flow_config():
     
     # set low conductivity in first 5 layers where walls == 1
     hk[:4, walls == 1] = 0.01
-    # hk[:3] = np.where(walls[None, :, :] == 1, 0.01, hk[:3])
     
     # Assume vertical conductivity equal to horizontal
     vka = hk # ALSO ASSUMPTION
@@ -154,8 +139,8 @@ def load_flow_config():
     
     # files with initial concentrations for different contaminant species
     conc1 = load_init_conc(conc_sp1_file)
-    conc2 = load_init_conc(conc_sp2_file)
-    conc3 = load_init_conc(conc_sp3_file)
+    # conc2 = load_init_conc(conc_sp2_file)
+    # conc3 = load_init_conc(conc_sp3_file)
     
     # periods for injection of contaminants (not used)
     active_periods = [c0, 0.0]

@@ -20,6 +20,8 @@ def load_cementwalls(file):
 
 # filenam =  r"./assets/cement_walls.tif"
 # x = load_cementwalls(filenam)
-# print(x)
+# print(x.shape)
+
+
 
     
